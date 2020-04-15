@@ -23,15 +23,14 @@ public class MongoDbSpringIntegrationTest {
         + " then object is saved")
     @Test
     public void test(@Autowired MongoTemplate mongoTemplate) {
-        // given
         DBObject objectToSave = BasicDBObjectBuilder.start()
             .add("key", "value")
             .get();
  
-        // when
         mongoTemplate.save(objectToSave, "collection");
         
         List<DBObject> objects = mongoTemplate.findAll(DBObject.class, "collection");
+        assertEquals(objects.size(), 1);
         assertEquals("value", objects.get(0).get("key"));
     }
 }

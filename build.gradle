@@ -7,18 +7,12 @@
  */
 
 plugins {
-    // Apply the java-library plugin to add support for Java Library
     id 'java'
     id 'org.springframework.boot' version '2.2.6.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-	//id 'org.springframework.boot' version '2.2.6.RELEASE'
 }
 
-//apply plugin: 'io.spring.dependency-management'
-
 repositories {
-    // Use jcenter for resolving dependencies.
-    // You can declare any Maven/Ivy/file repository here.
     mavenCentral()
     jcenter()
 }
@@ -26,7 +20,6 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-dependencies:2.2.6.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.2.6.RELEASE'
