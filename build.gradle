@@ -22,8 +22,12 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-parent'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	
+	testImplementation 'org.springframework.boot:spring-boot-starter-data-mongodb-test'
+	
     // This dependency is exported to consumers, that is to say found on their compile classpath.
     //api 'org.apache.commons:commons-math3:3.6.1'
 
