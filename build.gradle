@@ -8,11 +8,13 @@
 
 plugins {
     // Apply the java-library plugin to add support for Java Library
-    id 'java-library'
-	id 'org.springframework.boot' version '2.2.6.RELEASE'
+    id 'java'
+    id 'org.springframework.boot' version '2.2.6.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	//id 'org.springframework.boot' version '2.2.6.RELEASE'
 }
 
-apply plugin: 'io.spring.dependency-management'
+//apply plugin: 'io.spring.dependency-management'
 
 repositories {
     // Use jcenter for resolving dependencies.
@@ -22,18 +24,26 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-parent'
+	implementation 'org.springframework.boot:spring-boot-dependencies:2.2.6.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-	
-	testImplementation 'org.springframework.boot:spring-boot-starter-data-mongodb-test'
-	
-    // This dependency is exported to consumers, that is to say found on their compile classpath.
-    //api 'org.apache.commons:commons-math3:3.6.1'
 
-    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
-    //implementation 'com.google.guava:guava:28.0-jre'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.2.6.RELEASE'
+    testImplementation 'org.springframework:spring-test:5.2.5.RELEASE'
+    
+	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
+	
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+    
+    testImplementation 'junit:junit:4.13'
+    testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.6.2'
+}
 
-    // Use JUnit test framework
-    //testImplementation 'junit:junit:4.12'
+test {
+    useJUnitPlatform {
+        includeTags 'fast','medium'
+        excludeTags 'slow'
+    }
 }
