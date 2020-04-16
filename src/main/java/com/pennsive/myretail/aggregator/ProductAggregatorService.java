@@ -1,12 +1,11 @@
 package com.pennsive.myretail.aggregator;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.pennsive.myretail.document.Price;
+import com.pennsive.myretail.domain.Product;
+import com.pennsive.myretail.response.ProductResponse;
 import com.pennsive.myretail.service.PriceService;
 import com.pennsive.myretail.service.ProductService;
 
@@ -18,13 +17,16 @@ public class ProductAggregatorService {
 	@Autowired
 	private PriceService priceService;
 	
-	public Map<String, Object> getProduct(Long productId){
-		Map<String, Object> product = new HashMap<>();
+	public ProductResponse getProduct(Long productId){
+		
+		Product product = productService.getProduct(productId);
 		
 		Price price = priceService.getPrice(productId);
 		
-		product.put("current_price", price);
-		
-		return product;
+		return aggregateProduct(product, price);
+	}
+	
+	protected ProductResponse aggregateProduct(Product product, Price price) {
+		return new ProductResponse(product, price);
 	}
 }
