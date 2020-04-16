@@ -1,10 +1,10 @@
 package com.pennsive.myretail.domain;
 
-public class Product {
+public class ProductDomain {
 	private Long id;
 	private String name;
 	
-	public Product(Long productId, String name) {
+	public ProductDomain(Long productId, String name) {
 		id = productId;
 		this.name = name;
 	}

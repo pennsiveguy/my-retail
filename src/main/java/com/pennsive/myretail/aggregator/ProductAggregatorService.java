@@ -3,31 +3,31 @@ package com.pennsive.myretail.aggregator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.pennsive.myretail.document.Price;
-import com.pennsive.myretail.domain.Product;
-import com.pennsive.myretail.response.ProductResponse;
-import com.pennsive.myretail.service.PriceService;
-import com.pennsive.myretail.service.ProductService;
+import com.pennsive.myretail.document.PriceDocument;
+import com.pennsive.myretail.domain.ProductDomain;
+import com.pennsive.myretail.response.Product;
+import com.pennsive.myretail.service.PriceDocumentService;
+import com.pennsive.myretail.service.ProductDomainService;
 
 @Service
 public class ProductAggregatorService {
 	@Autowired
-	private ProductService productService;
+	private ProductDomainService productDomainService;
 
 	@Autowired
-	private PriceService priceService;
+	private PriceDocumentService priceDocumentService;
 	
-	public ProductResponse getProduct(Long productId){
+	public Product getProduct(Long productId){
 		
-		Product product = null;
-		product = productService.getProduct(productId);
+		ProductDomain productDomain = null;
+		productDomain = productDomainService.getProduct(productId);
 		
-		Price price = priceService.getPrice(productId);
+		PriceDocument priceDocument = priceDocumentService.getPrice(productId);
 		
-		return aggregateProduct(product, price);
+		return aggregateProduct(productDomain, priceDocument);
 	}
 	
-	protected ProductResponse aggregateProduct(Product product, Price price) {
-		return new ProductResponse(product, price);
+	protected Product aggregateProduct(ProductDomain productDomain, PriceDocument priceDocument) {
+		return new Product(productDomain, priceDocument);
 	}
 }

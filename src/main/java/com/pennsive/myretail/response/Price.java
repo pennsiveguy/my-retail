@@ -3,15 +3,19 @@ package com.pennsive.myretail.response;
 import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
-import com.pennsive.myretail.document.Price;
+import com.pennsive.myretail.document.PriceDocument;
 
-public class PriceResponse {
+public class Price {
 	private BigDecimal value;
 	private String currencyCode;
 	
-	public PriceResponse(final Price price) {
-		value = price.getValue();
-		currencyCode = price.getCurrencyCode();
+	public Price() {
+		
+	}
+	
+	public Price(final PriceDocument priceDocument) {
+		value = priceDocument.getValue();
+		currencyCode = priceDocument.getCurrencyCode();
 	}
 	
 	public BigDecimal getValue() {

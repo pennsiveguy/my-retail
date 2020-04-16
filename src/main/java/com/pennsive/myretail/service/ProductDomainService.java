@@ -11,10 +11,10 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pennsive.myretail.domain.Product;
+import com.pennsive.myretail.domain.ProductDomain;
 
 @Service
-public class ProductService {
+public class ProductDomainService {
 	protected static final String UNKNOWN_ITEM_TITLE = "Unknown Item";
 	
 	@Autowired
@@ -23,7 +23,7 @@ public class ProductService {
 	@Value("${redsky.full.url}")
 	private String redskyFullUrl;
 	
-	public Product getProduct(Long productId) {
+	public ProductDomain getProduct(Long productId) {
 		
 		Map<String, Long> params = new HashMap<>();
 		params.put("id", productId);
@@ -38,6 +38,6 @@ public class ProductService {
 			title = UNKNOWN_ITEM_TITLE;
 		}
 		
-		return new Product(productId, title);
+		return new ProductDomain(productId, title);
 	}
 }
