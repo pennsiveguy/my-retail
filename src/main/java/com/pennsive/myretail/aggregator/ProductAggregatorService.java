@@ -19,7 +19,8 @@ public class ProductAggregatorService {
 	
 	public ProductResponse getProduct(Long productId){
 		
-		Product product = productService.getProduct(productId);
+		Product product = null;
+		product = productService.getProduct(productId);
 		
 		Price price = priceService.getPrice(productId);
 		
