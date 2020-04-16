@@ -5,6 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,7 +31,7 @@ public class ProductController {
 	private PriceDocumentService priceDocumentService;
 	
 	@GetMapping(path = "/{id}", produces=MediaType.APPLICATION_JSON_VALUE)
-	@Operation(description = "Find a product by its ID.",
+	@Operation(description = "Find a product",
 	responses = {
 			@ApiResponse(content = @Content(schema = @Schema(implementation = Product.class)), responseCode = "200"),
 			@ApiResponse(content = @Content(schema = @Schema(implementation = Null.class)), responseCode = "404", description = "No product exists with that ID."),
@@ -40,12 +41,12 @@ public class ProductController {
 		return productAggregator.getProduct(id);
 	}
 	
-	@PostMapping(path = "/{id}")
-	@Operation(description = "Update an item's price by its ID.",
+	@PutMapping(path = "/{id}")
+	@Operation(description = "Update an item's price",
 	responses = {
-			@ApiResponse(content = @Content(schema = @Schema(implementation = Product.class)), responseCode = "200"),
-			@ApiResponse(content = @Content(schema = @Schema(implementation = Null.class)), responseCode = "404", description = "No product exists with that ID."),
-			@ApiResponse(content = @Content(schema = @Schema(implementation = Null.class)), responseCode = "400", description = "The product ID must be a number.")
+			@ApiResponse(responseCode = "200"),
+			@ApiResponse(responseCode = "404", description = "No product exists with that ID."),
+			@ApiResponse(responseCode = "400", description = "The product ID must be a number.")
 	})
 	public void updatePrice(
 			@Parameter(description = "The new price", required = true) @RequestBody Price price,
