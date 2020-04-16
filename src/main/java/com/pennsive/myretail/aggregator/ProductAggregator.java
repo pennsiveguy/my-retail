@@ -10,7 +10,7 @@ import com.pennsive.myretail.service.PriceDocumentService;
 import com.pennsive.myretail.service.ProductDomainService;
 
 @Service
-public class ProductAggregatorService {
+public class ProductAggregator {
 	@Autowired
 	private ProductDomainService productDomainService;
 
@@ -19,15 +19,10 @@ public class ProductAggregatorService {
 	
 	public Product getProduct(Long productId){
 		
-		ProductDomain productDomain = null;
-		productDomain = productDomainService.getProduct(productId);
+		ProductDomain productDomain = productDomainService.getProduct(productId);
 		
 		PriceDocument priceDocument = priceDocumentService.getPrice(productId);
 		
-		return aggregateProduct(productDomain, priceDocument);
-	}
-	
-	protected Product aggregateProduct(ProductDomain productDomain, PriceDocument priceDocument) {
 		return new Product(productDomain, priceDocument);
 	}
 }

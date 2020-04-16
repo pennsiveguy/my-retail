@@ -14,7 +14,6 @@ plugins {
 
 repositories {
     mavenCentral()
-    jcenter()
 }
 
 dependencies {
@@ -24,21 +23,17 @@ dependencies {
     implementation 'org.projectreactor:reactor-spring:1.0.1.RELEASE'
     implementation 'org.springdoc:springdoc-openapi-ui:1.2.32'
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.2.6.RELEASE'
-    testImplementation 'org.springframework:spring-test:5.2.5.RELEASE'
-    
+	testImplementation 'org.apache.commons:commons-lang3:3.9'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.2.6.RELEASE'    
 	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
 	
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
-    
     testImplementation 'junit:junit:4.13'
-    testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.6.2'
+    testImplementation 'org.mockito:mockito-core:2.7.22'
 }
 
 test {
-    useJUnitPlatform {
-        includeTags 'fast','medium'
-        excludeTags 'slow'
-    }
+    useJUnitPlatform()
+    testLogging {
+		events "passed", "skipped", "failed"
+	}
 }

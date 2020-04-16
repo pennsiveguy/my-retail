@@ -4,13 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pennsive.myretail.aggregator.ProductAggregatorService;
+import com.pennsive.myretail.aggregator.ProductAggregator;
 import com.pennsive.myretail.response.Price;
 import com.pennsive.myretail.response.Product;
 import com.pennsive.myretail.service.PriceDocumentService;
@@ -25,7 +24,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 @RequestMapping(path="/products")
 public class ProductController {
 	@Autowired
-	private ProductAggregatorService productAggregator;
+	private ProductAggregator productAggregator;
 
 	@Autowired
 	private PriceDocumentService priceDocumentService;

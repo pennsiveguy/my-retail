@@ -7,12 +7,11 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.client.HttpClientErrorException;
 
 @ControllerAdvice
-public class MyRetailControllerAdvice {
-	protected static final String NOT_FOUND_MESSAGE = "Item not found. Try Amazon.";
-	
-    @ExceptionHandler(NoSuchElementException.class)
+public class MyRetailControllerAdvice {	
+    @ExceptionHandler({NoSuchElementException.class, HttpClientErrorException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public void handleNotFound(Exception e) {
     	return;

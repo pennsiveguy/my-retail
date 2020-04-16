@@ -9,9 +9,7 @@ public class Price {
 	private BigDecimal value;
 	private String currencyCode;
 	
-	public Price() {
-		
-	}
+	public Price() {}
 	
 	public Price(final PriceDocument priceDocument) {
 		value = priceDocument.getValue();
