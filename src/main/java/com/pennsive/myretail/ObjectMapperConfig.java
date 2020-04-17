@@ -2,13 +2,15 @@ package com.pennsive.myretail;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
-public class RestClientConfig {
+public class ObjectMapperConfig {
 	
 	@Bean
-	public RestTemplate redskyRestTemplate() {
-		return new RestTemplate();
+	public ObjectMapper objectMapper() {
+		return new ObjectMapper();
 	}
+
 }
