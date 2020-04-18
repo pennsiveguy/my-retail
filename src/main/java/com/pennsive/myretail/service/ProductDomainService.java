@@ -23,7 +23,7 @@ public class ProductDomainService {
 	 * 		cache-control:	max-age=0, no-cache, no-store
 	 */
 	@Async
-	public CompletableFuture<RedskyResponseV2> getProduct(Long productId) {
+	public CompletableFuture<RedskyResponseV2> getProduct(Integer productId) {
 	    return CompletableFuture.completedFuture(redskyRestTemplate.getForObject(redskyFullUrlV2, RedskyResponseV2.class, productId));
 	}
 }

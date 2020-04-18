@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.pennsive.myretail.document.PriceDocument;
-import com.pennsive.myretail.domain.ProductDomain;
 import com.pennsive.myretail.model.external.redsky.RedskyResponseV2;
-import com.pennsive.myretail.response.Product;
+import com.pennsive.myretail.response.PriceResponse;
+import com.pennsive.myretail.response.ProductResponse;
 import com.pennsive.myretail.service.PriceDocumentService;
 import com.pennsive.myretail.service.ProductDomainService;
 
@@ -22,21 +22,21 @@ public class ProductAggregator {
 	@Autowired
 	private PriceDocumentService priceDocumentService;
 
-	public Product getProduct(Long productId) {
+	public ProductResponse getProduct(Integer productId) {
 
-		CompletableFuture<RedskyResponseV2> productDomainFuture = productDomainService.getProduct(productId);
+		CompletableFuture<RedskyResponseV2> redskyResponseFuture = productDomainService.getProduct(productId);
 
 		CompletableFuture<PriceDocument> priceDocumentFuture = priceDocumentService.getPrice(productId);
 
-		ProductDomain productDomain = null;
+		RedskyResponseV2 redskyResponse = null;
 		PriceDocument priceDocument = null;
 		try {
-			productDomain = new ProductDomain(productId, productDomainFuture.get().getTitle());
+			redskyResponse = redskyResponseFuture.get();
 			priceDocument = priceDocumentFuture.get();
 		} catch (InterruptedException | ExecutionException ex) {
 			throw new NoSuchElementException();
 		}
 
-		return new Product(productDomain, priceDocument);
+		return new ProductResponse(productId, redskyResponse.getTitle(), new PriceResponse(priceDocument));
 	}
 }

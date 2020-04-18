@@ -1,8 +1,8 @@
-{"_id":{"$numberInt":"13860428"},"value":{"$numberDouble":"13.49"},"currency_code":"USD"}
-{"_id":{"$numberInt":"15117729"},"value":{"$numberDouble":"77.29"},"currency_code":"USD"}
-{"_id":{"$numberInt":"16483589"},"value":{"$numberDouble":"35.89"},"currency_code":"USD"}
-{"_id":{"$numberInt":"16696652"},"value":{"$numberDouble":"66.52"},"currency_code":"USD"}
-{"_id":{"$numberInt":"16752456"},"value":{"$numberDouble":"24.56"},"currency_code":"USD"}
-{"_id":{"$numberInt":"15643793"},"value":{"$numberDouble":"37.93"},"currency_code":"USD"}
-{"_id":{"$numberInt":"54191101"},"value":{"$numberDouble":"249.99"},"currency_code":"USD"}
-{"_id":{"$numberInt":"53727884"},"value":{"$numberDouble":"299.99"},"currency_code":"USD"}
+{"productId":{"$numberInt":"13860428"},"value":{"$numberDouble":"13.49"},"currency_code":"USD"}
+{"productId":{"$numberInt":"15117729"},"value":{"$numberDouble":"77.29"},"currency_code":"USD"}
+{"productId":{"$numberInt":"16483589"},"value":{"$numberDouble":"35.89"},"currency_code":"USD"}
+{"productId":{"$numberInt":"16696652"},"value":{"$numberDouble":"66.52"},"currency_code":"USD"}
+{"productId":{"$numberInt":"16752456"},"value":{"$numberDouble":"24.56"},"currency_code":"USD"}
+{"productId":{"$numberInt":"15643793"},"value":{"$numberDouble":"37.93"},"currency_code":"USD"}
+{"productId":{"$numberInt":"54191101"},"value":{"$numberDouble":"249.99"},"currency_code":"USD"}
+{"productId":{"$numberInt":"53727884"},"value":{"$numberDouble":"299.99"},"currency_code":"USD"}

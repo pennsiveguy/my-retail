@@ -20,13 +20,13 @@ import org.mockito.junit.MockitoJUnitRunner;
 import com.pennsive.myretail.document.PriceDocument;
 import com.pennsive.myretail.model.external.redsky.RedskyResponseV2;
 import com.pennsive.myretail.objectbuilder.TestObjectBuilder;
-import com.pennsive.myretail.response.Product;
+import com.pennsive.myretail.response.ProductResponse;
 import com.pennsive.myretail.service.PriceDocumentService;
 import com.pennsive.myretail.service.ProductDomainService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProductAggregatorTest {
-	private Long productId;
+	private Integer productId;
 	private String productName;
 	private RedskyResponseV2 redskyResponse;
 	private BigDecimal value;
@@ -45,7 +45,7 @@ public class ProductAggregatorTest {
 	
 	@Before
 	public void setUp() {
-		productId = RandomUtils.nextLong();
+		productId = RandomUtils.nextInt();
 		productName = RandomStringUtils.random(10);
 		redskyResponse = builder.buildRedskyResponse(productName);
 		
@@ -59,7 +59,7 @@ public class ProductAggregatorTest {
 		when(productService.getProduct(productId)).thenReturn(CompletableFuture.completedFuture(redskyResponse));
 		when(priceService.getPrice(productId)).thenReturn(CompletableFuture.completedFuture(priceDocument));
 		
-		Product response = subject.getProduct(productId);
+		ProductResponse response = subject.getProduct(productId);
 		
 		assertEquals(productId, response.getId());
 		assertEquals(value, response.getPrice().getValue());

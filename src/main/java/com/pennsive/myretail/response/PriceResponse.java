@@ -5,13 +5,13 @@ import java.math.BigDecimal;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.pennsive.myretail.document.PriceDocument;
 
-public class Price {
+public class PriceResponse {
 	private BigDecimal value;
 	private String currencyCode;
 	
-	public Price() {}
+	public PriceResponse() {}
 	
-	public Price(final PriceDocument priceDocument) {
+	public PriceResponse(final PriceDocument priceDocument) {
 		value = priceDocument.getValue();
 		currencyCode = priceDocument.getCurrencyCode();
 	}

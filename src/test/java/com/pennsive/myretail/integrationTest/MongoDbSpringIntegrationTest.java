@@ -1,10 +1,9 @@
 package com.pennsive.myretail.integrationTest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +19,6 @@ import com.mongodb.DBObject;
 @EnableAutoConfiguration
 @ExtendWith(SpringExtension.class)
 public class MongoDbSpringIntegrationTest {
-    @DisplayName("given object to save"
-        + " when save object using MongoDB template"
-        + " then object is saved")
     @Test
     public void test(@Autowired MongoTemplate mongoTemplate) {
         DBObject objectToSave = BasicDBObjectBuilder.start()

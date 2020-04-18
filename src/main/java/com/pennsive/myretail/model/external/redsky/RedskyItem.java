@@ -2,15 +2,15 @@ package com.pennsive.myretail.model.external.redsky;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
 
-public class Item {
-	private ProductDescription productDescription;
+public class RedskyItem {
+	private RedskyProductDescription productDescription;
 
-	public ProductDescription getProductDescription() {
+	public RedskyProductDescription getProductDescription() {
 		return productDescription;
 	}
 
 	@JsonSetter("product_description")
-	public void setProductDescription(ProductDescription productDescription) {
+	public void setProductDescription(RedskyProductDescription productDescription) {
 		this.productDescription = productDescription;
 	}
 

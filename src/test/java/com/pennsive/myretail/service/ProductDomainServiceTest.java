@@ -1,6 +1,8 @@
 package com.pennsive.myretail.service;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -20,27 +22,19 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pennsive.myretail.model.external.redsky.Item;
-import com.pennsive.myretail.model.external.redsky.Product;
-import com.pennsive.myretail.model.external.redsky.ProductDescription;
+import com.pennsive.myretail.model.external.redsky.RedskyProduct;
 import com.pennsive.myretail.model.external.redsky.RedskyResponseV2;
-import com.pennsive.myretail.objectbuilder.TestObjectBuilder;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProductDomainServiceTest {
-	private Long productId;
-	private String title;
-	private RedskyResponseV2 redskyResponse;
+	private Integer productId;
 	private String redskyUrl;
-	
-	private TestObjectBuilder builder = new TestObjectBuilder();
 	
 	@Mock
 	private RestTemplate redskyRestTemplate;
 	
 	@Mock
-	private ObjectMapper objectMapper;
+	private RedskyResponseV2 redskyResponse;
 	
 	@InjectMocks
 	private ProductDomainService subject = new ProductDomainService();
@@ -49,19 +43,19 @@ public class ProductDomainServiceTest {
 	public void setUp() {
 		redskyUrl = RandomStringUtils.random(10);
 		ReflectionTestUtils.setField(subject, "redskyFullUrlV2", redskyUrl);
-		productId = RandomUtils.nextLong();
-		title = RandomStringUtils.random(10);
-		redskyResponse = builder.buildRedskyResponse(title);
+		productId = RandomUtils.nextInt();
 	}
 	
 	@Test
 	public void getProduct_HappyPath() throws InterruptedException, ExecutionException {
 		when(redskyRestTemplate.getForObject(redskyUrl, RedskyResponseV2.class, productId)).thenReturn(redskyResponse);
 		
-		RedskyResponseV2 result = subject.getProduct(productId).get();
-		assertEquals(title, result.getTitle());
+		RedskyResponseV2 actualResponse = subject.getProduct(productId).get();
+		assertSame(redskyResponse, actualResponse);
 		
 		verify(redskyRestTemplate).getForObject(redskyUrl, RedskyResponseV2.class, productId);
+		verify(redskyResponse, never()).setProduct(any(RedskyProduct.class));
+		verify(redskyResponse, never()).getTitle();
 	}
 	
 	@Test(expected = RestClientException.class)

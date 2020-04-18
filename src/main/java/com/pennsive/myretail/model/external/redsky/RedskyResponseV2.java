@@ -5,10 +5,10 @@ import java.util.NoSuchElementException;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 public class RedskyResponseV2 {
-	private Product product;
+	private RedskyProduct product;
 
 	@JsonSetter("product")
-	public void setProduct(Product product) {
+	public void setProduct(RedskyProduct product) {
 		this.product = product;
 	}
 

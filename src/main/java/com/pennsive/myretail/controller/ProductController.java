@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pennsive.myretail.aggregator.ProductAggregator;
-import com.pennsive.myretail.response.Price;
-import com.pennsive.myretail.response.Product;
+import com.pennsive.myretail.response.PriceResponse;
+import com.pennsive.myretail.response.ProductResponse;
 import com.pennsive.myretail.service.PriceDocumentService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,17 +36,17 @@ public class ProductController {
 			+ "<p>Failure to submit an ID will result in sincere and empathetic disappointment from the staff at pennsive.com. It will not, alas, get you any data."
 			+ "</p>",
 	responses = {
-			@ApiResponse(content = @Content(schema = @Schema(implementation = Product.class)), 
+			@ApiResponse(content = @Content(schema = @Schema(implementation = ProductResponse.class)), 
 					responseCode = "200"),
 			@ApiResponse(content = @Content(schema = @Schema(implementation = Null.class)), 
-					responseCode = "404", description = "No product exists with that ID. Try <a href='https://amazon.com'>Amazon</a>. Jeff Bezos would sell his own mother for cab fare."),
+					responseCode = "404", description = "No product exists with that ID. Try <a href='https://amazon.com'>Amazon</a>. KIDDING!!!"),
 			@ApiResponse(content = @Content(schema = @Schema(implementation = Null.class)), responseCode = "400", description = "The product ID must be a number.")
 	})
-	public Product getProduct(@Parameter(description = "The product ID you wish to look up", required = true) @PathVariable("id") Long id) {
+	public ProductResponse getProduct(@Parameter(description = "The product ID you wish to look up", required = true) @PathVariable("id") Integer id) {
 		return productAggregator.getProduct(id);
 	}
 	
-	@PutMapping(path = "/{id}")
+	@PutMapping(path = "/{id}", consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
 	@Operation(description = "Update an item's price.",
 	responses = {
 			@ApiResponse(responseCode = "200"),
@@ -54,8 +54,8 @@ public class ProductController {
 			@ApiResponse(responseCode = "400", description = "The product ID must be a number.")
 	})
 	public void updatePrice(
-			@Parameter(description = "The new price", required = true) @RequestBody Price price,
-			@Parameter(description = "The product ID whose price you wish to update", required = true) @PathVariable("id") Long id) {
+			@Parameter(description = "The new price", required = true) @RequestBody PriceResponse price,
+			@Parameter(description = "The product ID whose price you wish to update", required = true) @PathVariable("id") Integer id) {
 		priceDocumentService.updatePrice(id, price);
 	}
 }

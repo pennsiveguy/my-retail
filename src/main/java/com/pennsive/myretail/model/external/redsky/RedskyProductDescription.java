@@ -2,7 +2,7 @@ package com.pennsive.myretail.model.external.redsky;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
 
-public class ProductDescription {
+public class RedskyProductDescription {
 	private String title;
 
 	public String getTitle() {
