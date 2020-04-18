@@ -1,6 +1,10 @@
 package com.pennsive.myretail.service;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.pennsive.myretail.document.PriceDocument;
@@ -12,12 +16,18 @@ public class PriceDocumentService {
 	@Autowired
 	private PriceRepository priceRepository;
 
-	public PriceDocument getPrice(Long productId) {
-		return priceRepository.findById(productId).get();
+	@Async
+	public CompletableFuture<PriceDocument> getPrice(Long productId) {
+		return CompletableFuture.completedFuture(priceRepository.findById(productId).get());
 	}
 
 	public void updatePrice(Long productId, Price price) {
-		PriceDocument priceDocument = getPrice(productId);
+		PriceDocument priceDocument = null;
+		try {
+			priceDocument = getPrice(productId).get();
+		} catch (InterruptedException | ExecutionException e) {
+			
+		}
 		priceDocument.setValue(price.getValue());
 		priceRepository.save(priceDocument);
 	}

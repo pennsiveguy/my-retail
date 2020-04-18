@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
@@ -17,7 +18,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.pennsive.myretail.document.PriceDocument;
-import com.pennsive.myretail.domain.ProductDomain;
+import com.pennsive.myretail.model.external.redsky.RedskyResponseV2;
+import com.pennsive.myretail.objectbuilder.TestObjectBuilder;
 import com.pennsive.myretail.response.Product;
 import com.pennsive.myretail.service.PriceDocumentService;
 import com.pennsive.myretail.service.ProductDomainService;
@@ -26,9 +28,11 @@ import com.pennsive.myretail.service.ProductDomainService;
 public class ProductAggregatorTest {
 	private Long productId;
 	private String productName;
-	private ProductDomain product;
+	private RedskyResponseV2 redskyResponse;
 	private BigDecimal value;
 	private PriceDocument priceDocument;
+	
+	private TestObjectBuilder builder = new TestObjectBuilder();
 	
 	@Mock
 	private ProductDomainService productService;
@@ -43,7 +47,7 @@ public class ProductAggregatorTest {
 	public void setUp() {
 		productId = RandomUtils.nextLong();
 		productName = RandomStringUtils.random(10);
-		product = new ProductDomain(productId, productName);
+		redskyResponse = builder.buildRedskyResponse(productName);
 		
 		value = new BigDecimal(RandomUtils.nextDouble());
 		priceDocument = new PriceDocument();
@@ -52,8 +56,8 @@ public class ProductAggregatorTest {
 	
 	@Test
 	public void getProduct_HappyPath() {
-		when(productService.getProduct(productId)).thenReturn(product);
-		when(priceService.getPrice(productId)).thenReturn(priceDocument);
+		when(productService.getProduct(productId)).thenReturn(CompletableFuture.completedFuture(redskyResponse));
+		when(priceService.getPrice(productId)).thenReturn(CompletableFuture.completedFuture(priceDocument));
 		
 		Product response = subject.getProduct(productId);
 		

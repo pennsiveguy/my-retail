@@ -17,7 +17,7 @@ public class MyRetailControllerAdvice {
     	return;
     }
 
-    @ExceptionHandler({NumberFormatException.class, HttpMessageNotReadableException.class, IllegalStateException.class})
+    @ExceptionHandler({NumberFormatException.class, HttpMessageNotReadableException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public void handleBadNumericInput(Exception e) {
     	return;

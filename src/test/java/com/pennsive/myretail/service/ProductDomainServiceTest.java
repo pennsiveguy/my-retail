@@ -1,11 +1,10 @@
 package com.pennsive.myretail.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
@@ -22,11 +21,11 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pennsive.myretail.domain.ProductDomain;
 import com.pennsive.myretail.model.external.redsky.Item;
 import com.pennsive.myretail.model.external.redsky.Product;
 import com.pennsive.myretail.model.external.redsky.ProductDescription;
 import com.pennsive.myretail.model.external.redsky.RedskyResponseV2;
+import com.pennsive.myretail.objectbuilder.TestObjectBuilder;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProductDomainServiceTest {
@@ -34,6 +33,8 @@ public class ProductDomainServiceTest {
 	private String title;
 	private RedskyResponseV2 redskyResponse;
 	private String redskyUrl;
+	
+	private TestObjectBuilder builder = new TestObjectBuilder();
 	
 	@Mock
 	private RestTemplate redskyRestTemplate;
@@ -50,36 +51,22 @@ public class ProductDomainServiceTest {
 		ReflectionTestUtils.setField(subject, "redskyFullUrlV2", redskyUrl);
 		productId = RandomUtils.nextLong();
 		title = RandomStringUtils.random(10);
-		redskyResponse = buildResponse(title);
+		redskyResponse = builder.buildRedskyResponse(title);
 	}
 	
 	@Test
-	public void getProduct_HappyPath() {
-		when(redskyRestTemplate.getForObject(eq(redskyUrl), eq(RedskyResponseV2.class), eq(Collections.singletonMap("id", productId)))).thenReturn(redskyResponse);
+	public void getProduct_HappyPath() throws InterruptedException, ExecutionException {
+		when(redskyRestTemplate.getForObject(redskyUrl, RedskyResponseV2.class, productId)).thenReturn(redskyResponse);
 		
-		ProductDomain result = subject.getProduct(productId);
-		assertEquals(title, result.getName());
-		assertEquals(productId, result.getId());
+		RedskyResponseV2 result = subject.getProduct(productId).get();
+		assertEquals(title, result.getTitle());
 		
-		verify(redskyRestTemplate).getForObject(eq(redskyUrl), eq(RedskyResponseV2.class), eq(Collections.singletonMap("id", productId)));
+		verify(redskyRestTemplate).getForObject(redskyUrl, RedskyResponseV2.class, productId);
 	}
 	
 	@Test(expected = RestClientException.class)
 	public void getProduct_RestClientException() {
-		when(redskyRestTemplate.getForObject(eq(redskyUrl), eq(RedskyResponseV2.class), eq(Collections.singletonMap("id", productId)))).thenThrow(new HttpClientErrorException(HttpStatus.BAD_GATEWAY));
+		when(redskyRestTemplate.getForObject(redskyUrl, RedskyResponseV2.class, productId)).thenThrow(new HttpClientErrorException(HttpStatus.BAD_GATEWAY));
 		subject.getProduct(productId);
-	}
-	
-	private RedskyResponseV2 buildResponse(String title) {
-		ProductDescription description = new ProductDescription();
-		description.setTitle(title);
-		Item item = new Item();
-		item.setProductDescription(description);
-		Product product = new Product();
-		product.setItem(item);
-
-		RedskyResponseV2 response = new RedskyResponseV2();
-		response.setProduct(product);
-		return response;
 	}
 }
