@@ -1,24 +1,26 @@
 package com.pennsive.myretail.controller;
 
-import static org.mockito.Mockito.when;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.apache.commons.lang3.RandomUtils.nextInt;
-import static org.apache.commons.lang3.RandomUtils.nextDouble;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
-
+import static org.apache.commons.lang3.RandomUtils.nextDouble;
+import static org.apache.commons.lang3.RandomUtils.nextInt;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
-import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.ArgumentCaptor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -29,13 +31,6 @@ import com.pennsive.myretail.aggregator.ProductAggregator;
 import com.pennsive.myretail.response.PriceResponse;
 import com.pennsive.myretail.response.ProductResponse;
 import com.pennsive.myretail.service.PriceDocumentService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Profile;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -49,7 +44,7 @@ public class WebMockTest {
 	private MockMvc mockMvc;
 	
 	@MockBean
-	private ProductAggregator aggregator;
+	private ProductAggregator productAggregator;
 
 	@MockBean
 	private PriceDocumentService priceService;
@@ -60,24 +55,24 @@ public class WebMockTest {
 	private String currencyCode;
 	private ProductResponse response;
 	private BigDecimal value;
-	private PriceResponse price;
+	private PriceResponse priceResponse;
 	
 	@BeforeEach
 	public void setUp() {
 		id = nextInt();
 		url = BASE_PATH + id.toString();
 		value = new BigDecimal(nextDouble());
-		price = new PriceResponse();
+		priceResponse = new PriceResponse();
 		name = randomAlphabetic(10);
 		currencyCode = randomAlphabetic(3);
-		ReflectionTestUtils.setField(price, "value", value);
-		ReflectionTestUtils.setField(price, "currencyCode", currencyCode);
-		response = new ProductResponse(id, name, price);
+		ReflectionTestUtils.setField(priceResponse, "value", value);
+		ReflectionTestUtils.setField(priceResponse, "currencyCode", currencyCode);
+		response = new ProductResponse(id, name, priceResponse);
 	}
 
 	@Test
 	public void getProduct_HappyPath() throws Exception {
-		when(aggregator.getProduct(id)).thenReturn(response);
+		when(productAggregator.getProduct(id)).thenReturn(response);
 		ResultActions resultActions = this.mockMvc.perform(get(url)).andExpect(status().isOk());
 		
 		MvcResult result = resultActions.andReturn();
@@ -86,25 +81,32 @@ public class WebMockTest {
 		ProductResponse actualResponse = objectMapper.readValue(contentAsString, ProductResponse.class);
 		assertEquals(id, actualResponse.getId());
 		assertEquals(name, actualResponse.getName());
-		assertEquals(price.getValue(), actualResponse.getPrice().getValue());
-		assertEquals(price.getCurrencyCode(), actualResponse.getPrice().getCurrencyCode());
+		assertEquals(priceResponse.getValue(), actualResponse.getPrice().getValue());
+		assertEquals(priceResponse.getCurrencyCode(), actualResponse.getPrice().getCurrencyCode());
 	}
 
 	@Test
 	public void getProduct_InvalidProductId() throws Exception {
-		when(aggregator.getProduct(id)).thenReturn(response);
 		this.mockMvc.perform(get(BASE_PATH + randomAlphabetic(5))).andExpect(status().isBadRequest());
 	}
 
 	@Test
 	public void getProduct_MissingProductId() throws Exception {
-		when(aggregator.getProduct(id)).thenReturn(response);
 		this.mockMvc.perform(get(BASE_PATH)).andExpect(status().isNotFound());
 	}
 
 	@Test
-	public void getProduct_NoSuchElementException() throws Exception {
-		when(aggregator.getProduct(id)).thenThrow(new NoSuchElementException());
-		this.mockMvc.perform(get(BASE_PATH)).andExpect(status().isNotFound());
+	public void updatePrice_HappyPath() throws Exception {
+		this.mockMvc.perform(
+			      put(url)
+			      .content(objectMapper.writeValueAsString(priceResponse))
+			      .contentType(MediaType.APPLICATION_JSON)
+			      .accept(MediaType.APPLICATION_JSON))
+			      .andExpect(status().isOk());
+
+		ArgumentCaptor<PriceResponse> priceRespCapture = ArgumentCaptor.forClass(PriceResponse.class);
+		verify(priceService).updatePrice(eq(id), priceRespCapture.capture());
+		PriceResponse updatedPrice = priceRespCapture.getValue();
+		assertEquals(priceResponse.getValue(), updatedPrice.getValue());
 	}
 }

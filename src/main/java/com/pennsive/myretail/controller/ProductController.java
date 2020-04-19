@@ -31,7 +31,7 @@ public class ProductController {
 	
 	@GetMapping(path = "/{id}", produces=MediaType.APPLICATION_JSON_VALUE)
 	@Operation(description = "Find a product by its numeric ID. "
-			+ "<p>Some IDs which return results are 54191101 and 13860428. </p>"
+			+ "<p>Some IDs which return results are 54191101, 53727884, and 13860428. </p>"
 			+ "<p>Non-numeric IDs (i.e. 'foobar') will be flagged as bad requests.</p>"
 			+ "<p>Failure to submit an ID will result in sincere and empathetic disappointment from the staff at pennsive.com. It will not, alas, get you any data."
 			+ "</p>",
@@ -47,7 +47,7 @@ public class ProductController {
 	}
 	
 	@PutMapping(path = "/{id}", consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	@Operation(description = "Update an item's price.",
+	@Operation(description = "Update an item's price. Pick one of the ",
 	responses = {
 			@ApiResponse(responseCode = "200"),
 			@ApiResponse(responseCode = "404", description = "No product exists with that ID."),
