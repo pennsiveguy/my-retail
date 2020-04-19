@@ -6,7 +6,9 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.util.NoSuchElementException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
@@ -15,6 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.pennsive.myretail.document.PriceDocument;
@@ -68,5 +71,50 @@ public class ProductAggregatorTest {
 		verify(productService).getProduct(productId);
 		verify(priceService).getPrice(productId);
 		verifyNoMoreInteractions(productService, priceService);
+	}
+	
+	@Test(expected = NoSuchElementException.class)
+	public void getProduct_InterruptedException_FromProduct() throws InterruptedException, ExecutionException {
+		@SuppressWarnings("unchecked")
+		CompletableFuture<RedskyResponseV2> mockFuture = Mockito.mock(CompletableFuture.class);
+		when(productService.getProduct(productId)).thenReturn(mockFuture);
+		when(mockFuture.get()).thenThrow(new InterruptedException());
+		subject.getProduct(productId);
+	}
+	
+	@Test(expected = NoSuchElementException.class)
+	public void getProduct_ExecutionException_FromProduct() throws InterruptedException, ExecutionException {
+		@SuppressWarnings("unchecked")
+		CompletableFuture<RedskyResponseV2> mockFuture = Mockito.mock(CompletableFuture.class);
+		when(productService.getProduct(productId)).thenReturn(mockFuture);
+		when(mockFuture.get()).thenThrow(new TestException());
+		subject.getProduct(productId);
+	}
+	
+	@Test(expected = NoSuchElementException.class)
+	public void getProduct_InterruptedException_FromPrice() throws InterruptedException, ExecutionException {
+		@SuppressWarnings("unchecked")
+		CompletableFuture<PriceDocument> mockFuture = Mockito.mock(CompletableFuture.class);
+		when(productService.getProduct(productId)).thenReturn(CompletableFuture.completedFuture(redskyResponse));
+		when(priceService.getPrice(productId)).thenReturn(mockFuture);
+		when(mockFuture.get()).thenThrow(new InterruptedException());
+		subject.getProduct(productId);
+	}
+	
+	@Test(expected = NoSuchElementException.class)
+	public void getProduct_ExecutionException_FromPrice() throws InterruptedException, ExecutionException {
+		@SuppressWarnings("unchecked")
+		CompletableFuture<PriceDocument> mockFuture = Mockito.mock(CompletableFuture.class);
+		when(productService.getProduct(productId)).thenReturn(CompletableFuture.completedFuture(redskyResponse));
+		when(priceService.getPrice(productId)).thenReturn(mockFuture);
+		when(mockFuture.get()).thenThrow(new TestException());
+		subject.getProduct(productId);
+	}
+	
+	@SuppressWarnings("serial")
+	class TestException extends ExecutionException {
+		protected TestException() {
+			super();
+		}
 	}
 }

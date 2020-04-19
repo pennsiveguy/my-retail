@@ -1,7 +1,6 @@
 package com.pennsive.myretail.service;
 
 import static org.junit.Assert.assertSame;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -22,7 +21,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import com.pennsive.myretail.model.external.redsky.RedskyProduct;
 import com.pennsive.myretail.model.external.redsky.RedskyResponseV2;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -54,7 +52,6 @@ public class ProductDomainServiceTest {
 		assertSame(redskyResponse, actualResponse);
 		
 		verify(redskyRestTemplate).getForObject(redskyUrl, RedskyResponseV2.class, productId);
-		verify(redskyResponse, never()).setProduct(any(RedskyProduct.class));
 		verify(redskyResponse, never()).getTitle();
 	}
 	

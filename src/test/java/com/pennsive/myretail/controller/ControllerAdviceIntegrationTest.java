@@ -4,6 +4,7 @@ import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomUtils.nextDouble;
 import static org.apache.commons.lang3.RandomUtils.nextInt;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -12,19 +13,22 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
+import java.util.NoSuchElementException;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.client.RestClientException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pennsive.myretail.aggregator.ProductAggregator;
@@ -32,23 +36,23 @@ import com.pennsive.myretail.response.PriceResponse;
 import com.pennsive.myretail.response.ProductResponse;
 import com.pennsive.myretail.service.PriceDocumentService;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-public class WebMockTest {
+@RunWith(SpringJUnit4ClassRunner.class)
+public class ControllerAdviceIntegrationTest {
 	private static final String BASE_PATH = "/products/";
-	
-	@Autowired
-	private ObjectMapper objectMapper;
-	
-	@Autowired
+
 	private MockMvc mockMvc;
-	
-	@MockBean
+
+	private ObjectMapper objectMapper = new ObjectMapper();
+
+	@Mock
+	private PriceDocumentService priceService;
+
+	@Mock
 	private ProductAggregator productAggregator;
 
-	@MockBean
-	private PriceDocumentService priceService;
-	
+	@InjectMocks
+	private ProductController productController;
+
 	private Integer id;
 	private String url;
 	private String name;
@@ -56,11 +60,13 @@ public class WebMockTest {
 	private ProductResponse response;
 	private BigDecimal value;
 	private PriceResponse priceResponse;
-	
-	@BeforeEach
-	public void setUp() {
+
+	@Before
+	public void setup() {
 		id = nextInt();
 		url = BASE_PATH + id.toString();
+		mockMvc = MockMvcBuilders.standaloneSetup(productController).setControllerAdvice(MyRetailControllerAdvice.class)
+				.build();
 		value = new BigDecimal(nextDouble());
 		priceResponse = new PriceResponse();
 		name = randomAlphabetic(10);
@@ -73,8 +79,8 @@ public class WebMockTest {
 	@Test
 	public void getProduct_HappyPath() throws Exception {
 		when(productAggregator.getProduct(id)).thenReturn(response);
-		ResultActions resultActions = this.mockMvc.perform(get(url)).andExpect(status().isOk());
-		
+		ResultActions resultActions = mockMvc.perform(get(url)).andExpect(status().isOk());
+
 		MvcResult result = resultActions.andReturn();
 		String contentAsString = result.getResponse().getContentAsString();
 
@@ -87,23 +93,53 @@ public class WebMockTest {
 
 	@Test
 	public void getProduct_InvalidProductId() throws Exception {
-		this.mockMvc.perform(get(BASE_PATH + randomAlphabetic(5))).andExpect(status().isBadRequest());
+		mockMvc.perform(get(BASE_PATH + randomAlphabetic(5))).andExpect(status().isBadRequest());
 	}
 
 	@Test
 	public void getProduct_MissingProductId() throws Exception {
-		this.mockMvc.perform(get(BASE_PATH)).andExpect(status().isNotFound());
+		mockMvc.perform(get(BASE_PATH)).andExpect(status().isNotFound());
+	}
+
+	@Test
+	public void getProduct_NoProductFound() throws Exception {
+		when(productAggregator.getProduct(id)).thenThrow(new NoSuchElementException());
+		mockMvc.perform(get(url)).andExpect(status().isNotFound());
+	}
+
+	@Test
+	public void getProduct_ErrorCallingRedsky() throws Exception {
+		when(productAggregator.getProduct(id)).thenThrow(new RestClientException(null));
+		mockMvc.perform(get(url)).andExpect(status().isNotFound());
 	}
 
 	@Test
 	public void updatePrice_HappyPath() throws Exception {
-		this.mockMvc.perform(
-			      put(url)
-			      .content(objectMapper.writeValueAsString(priceResponse))
-			      .contentType(MediaType.APPLICATION_JSON)
-			      .accept(MediaType.APPLICATION_JSON))
-			      .andExpect(status().isOk());
+		mockMvc.perform(put(url).content(objectMapper.writeValueAsString(priceResponse))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
 
+		ArgumentCaptor<PriceResponse> priceRespCapture = ArgumentCaptor.forClass(PriceResponse.class);
+		verify(priceService).updatePrice(eq(id), priceRespCapture.capture());
+		PriceResponse updatedPrice = priceRespCapture.getValue();
+		assertEquals(priceResponse.getValue(), updatedPrice.getValue());
+	}
+
+	@Test
+	public void updatePrice_InvalidProductId() throws Exception {
+		mockMvc.perform(put(BASE_PATH + randomAlphabetic(5)).content(objectMapper.writeValueAsString(priceResponse))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isBadRequest());
+	}
+
+	@Test
+	public void updatePrice_PriceNotFound() throws Exception {
+		when(priceService.updatePrice(eq(id), any(PriceResponse.class))).thenThrow(new NoSuchElementException());
+
+		mockMvc.perform(put(url).content(objectMapper.writeValueAsString(priceResponse))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNotFound());
+		
 		ArgumentCaptor<PriceResponse> priceRespCapture = ArgumentCaptor.forClass(PriceResponse.class);
 		verify(priceService).updatePrice(eq(id), priceRespCapture.capture());
 		PriceResponse updatedPrice = priceRespCapture.getValue();

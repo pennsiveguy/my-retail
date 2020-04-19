@@ -23,7 +23,6 @@ public class ProductAggregator {
 	private PriceDocumentService priceDocumentService;
 
 	public ProductResponse getProduct(Integer productId) {
-
 		CompletableFuture<RedskyResponseV2> redskyResponseFuture = productDomainService.getProduct(productId);
 
 		CompletableFuture<PriceDocument> priceDocumentFuture = priceDocumentService.getPrice(productId);

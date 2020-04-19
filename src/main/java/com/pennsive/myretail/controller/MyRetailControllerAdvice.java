@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.RestClientException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @ControllerAdvice
 public class MyRetailControllerAdvice {	
@@ -17,9 +18,9 @@ public class MyRetailControllerAdvice {
     	return;
     }
 
-    @ExceptionHandler({NumberFormatException.class, HttpMessageNotReadableException.class})
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public void handleBadNumericInput(Exception e) {
+    public void handleBadInput(Exception e) {
     	return;
     }
 }

@@ -1,16 +1,12 @@
 package com.pennsive.myretail.model.external.redsky;
 
-import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class RedskyProduct {
+	@JsonProperty("item")
 	private RedskyItem item;
 
 	public RedskyItem getItem() {
 		return item;
-	}
-
-	@JsonSetter("item")
-	public void setItem(RedskyItem item) {
-		this.item = item;
 	}
 }

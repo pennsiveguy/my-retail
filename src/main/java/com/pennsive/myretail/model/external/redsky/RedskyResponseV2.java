@@ -2,15 +2,11 @@ package com.pennsive.myretail.model.external.redsky;
 
 import java.util.NoSuchElementException;
 
-import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class RedskyResponseV2 {
+	@JsonProperty("product")
 	private RedskyProduct product;
-
-	@JsonSetter("product")
-	public void setProduct(RedskyProduct product) {
-		this.product = product;
-	}
 
 	public String getTitle() {
 		String title = null;
