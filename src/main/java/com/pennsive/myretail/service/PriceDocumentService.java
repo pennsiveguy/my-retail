@@ -20,9 +20,9 @@ public class PriceDocumentService {
 		return CompletableFuture.completedFuture(priceDocumentRepository.findByProductId(productId).get());
 	}
 
-	public void updatePrice(Integer productId, PriceResponse price) {
+	public PriceDocument updatePrice(Integer productId, PriceResponse price) {
 		PriceDocument priceDocument = priceDocumentRepository.findByProductId(productId).get();
 		priceDocument.setValue(price.getValue());
-		priceDocumentRepository.save(priceDocument);
+		return priceDocumentRepository.save(priceDocument);
 	}
 }

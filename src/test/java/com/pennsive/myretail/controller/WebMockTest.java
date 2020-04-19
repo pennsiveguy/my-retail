@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
+import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,6 +40,8 @@ import org.springframework.context.annotation.Profile;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class WebMockTest {
+	private static final String BASE_PATH = "/products/";
+	
 	@Autowired
 	private ObjectMapper objectMapper;
 	
@@ -62,7 +65,7 @@ public class WebMockTest {
 	@BeforeEach
 	public void setUp() {
 		id = nextInt();
-		url = "/products/" + id.toString();
+		url = BASE_PATH + id.toString();
 		value = new BigDecimal(nextDouble());
 		price = new PriceResponse();
 		name = randomAlphabetic(10);
@@ -85,5 +88,23 @@ public class WebMockTest {
 		assertEquals(name, actualResponse.getName());
 		assertEquals(price.getValue(), actualResponse.getPrice().getValue());
 		assertEquals(price.getCurrencyCode(), actualResponse.getPrice().getCurrencyCode());
+	}
+
+	@Test
+	public void getProduct_InvalidProductId() throws Exception {
+		when(aggregator.getProduct(id)).thenReturn(response);
+		this.mockMvc.perform(get(BASE_PATH + randomAlphabetic(5))).andExpect(status().isBadRequest());
+	}
+
+	@Test
+	public void getProduct_MissingProductId() throws Exception {
+		when(aggregator.getProduct(id)).thenReturn(response);
+		this.mockMvc.perform(get(BASE_PATH)).andExpect(status().isNotFound());
+	}
+
+	@Test
+	public void getProduct_NoSuchElementException() throws Exception {
+		when(aggregator.getProduct(id)).thenThrow(new NoSuchElementException());
+		this.mockMvc.perform(get(BASE_PATH)).andExpect(status().isNotFound());
 	}
 }
