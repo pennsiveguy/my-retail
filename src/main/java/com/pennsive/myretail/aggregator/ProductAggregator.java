@@ -37,6 +37,7 @@ public class ProductAggregator {
 			throw new NoSuchElementException();
 		}
 
-		return new ProductResponse(productId, redskyResponse.getTitle(), new PriceResponse(priceDocument));
+		return new ProductResponse(productId, redskyResponse.getTitle(), 
+				new PriceResponse(priceDocument.getValue(), priceDocument.getCurrencyCode()));
 	}
 }
