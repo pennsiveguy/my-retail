@@ -11,9 +11,15 @@ public class RedskyResponseV2 {
 	public String getTitle() {
 		String title = null;
 		
+		NullPointerException npe = null;
+		
 		try {
 			title = product.getItem().getProductDescription().getTitle();
-		} catch(NullPointerException npe) {
+		} catch(NullPointerException ex) {
+			npe = ex;
+		}
+		
+		if(npe != null || title == null || title.isEmpty()) {
 			throw new NoSuchElementException("title");
 		}
 		
