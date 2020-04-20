@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -20,22 +21,21 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import com.pennsive.myretail.BaseTest;
 import com.pennsive.myretail.document.PriceDocument;
 import com.pennsive.myretail.model.external.redsky.RedskyResponseV2;
-import com.pennsive.myretail.objectbuilder.TestObjectBuilder;
 import com.pennsive.myretail.response.ProductResponse;
 import com.pennsive.myretail.service.PriceDocumentService;
 import com.pennsive.myretail.service.ProductDomainService;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ProductAggregatorTest {
+public class ProductAggregatorTest extends BaseTest {
 	private Integer productId;
 	private String productName;
 	private RedskyResponseV2 redskyResponse;
 	private BigDecimal value;
 	private PriceDocument priceDocument;
-	
-	private TestObjectBuilder builder = new TestObjectBuilder();
+	private String currencyCode;
 	
 	@Mock
 	private ProductDomainService productService;
@@ -50,16 +50,16 @@ public class ProductAggregatorTest {
 	public void setUp() {
 		productId = RandomUtils.nextInt();
 		productName = RandomStringUtils.random(10);
-		redskyResponse = builder.buildRedskyResponse(productName);
+		redskyResponse = testObjectBuilder.buildRedskyResponse(productName);
 		
 		value = new BigDecimal(RandomUtils.nextDouble());
-		priceDocument = new PriceDocument();
-		priceDocument.setValue(value);
+		currencyCode = RandomStringUtils.random(10);
+		priceDocument = testObjectBuilder.buildPriceDocument(productId, value, currencyCode);
 	}
 	
 	@Test
 	public void getProduct_HappyPath() {
-		when(productService.getProduct(productId)).thenReturn(CompletableFuture.completedFuture(redskyResponse));
+		when(productService.getProduct(productId)).thenReturn(CompletableFuture.completedFuture(Optional.of(redskyResponse).get()));
 		when(priceService.getPrice(productId)).thenReturn(CompletableFuture.completedFuture(priceDocument));
 		
 		ProductResponse response = subject.getProduct(productId);

@@ -14,17 +14,27 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 
+import com.mongodb.client.result.UpdateResult;
+import com.pennsive.myretail.BaseTest;
+import com.pennsive.myretail.IntegrationTestConfig;
 import com.pennsive.myretail.document.PriceDocument;
-import com.pennsive.myretail.repository.PriceDocumentRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @EnableAutoConfiguration
-public class PriceDocumentRepositoryIntegrationTest {
+@Import(IntegrationTestConfig.class)
+@ActiveProfiles("dev")
+@TestPropertySource("classpath:test-application-dev.properties")
+public class PriceDocumentRepositoryIntegrationTest extends BaseTest {
 	@Autowired
-	private PriceDocumentRepository repository;
+	private PriceDocumentRepository priceDocumentRepository;
+	
+	@Autowired
+	private PriceDocumentUpdateRepository priceDocumentUpdateRepository;
 	
 	@Test
 	public void testCrud() {
@@ -32,36 +42,36 @@ public class PriceDocumentRepositoryIntegrationTest {
 		Double value = nextDouble();
 		String currencyCode = randomAlphabetic(3);
 		
-		Optional<PriceDocument> price = repository.findByProductId(productId);
+		Optional<PriceDocument> price = priceDocumentRepository.findByProductId(productId);
 		assertFalse(price.isPresent());
 		
-		PriceDocument newPrice = new PriceDocument();
-		newPrice.setValue(new BigDecimal(value));
-		ReflectionTestUtils.setField(newPrice, "productId", productId);
-		ReflectionTestUtils.setField(newPrice, "currencyCode", currencyCode);
+		PriceDocument newPrice = testObjectBuilder.buildPriceDocument(productId, new BigDecimal(value), currencyCode);
 		
-		repository.save(newPrice);
-		assertEquals(1, repository.findAll().size());
+		priceDocumentRepository.save(newPrice);
+		assertEquals(1, priceDocumentRepository.findAll().size());
 		
-		PriceDocument fetchedPrice = repository.findByProductId(productId).get();
+		PriceDocument fetchedPrice = priceDocumentRepository.findByProductId(productId).get();
 		assertTrue(value == fetchedPrice.getValue().doubleValue());
 		assertEquals(currencyCode, fetchedPrice.getCurrencyCode());
 		
 		Double newValue = nextDouble();
-		fetchedPrice.setValue(new BigDecimal(newValue));
-		String newCurrencyCode = randomAlphabetic(3);
-		ReflectionTestUtils.setField(fetchedPrice, "currencyCode", newCurrencyCode);
-		
-		repository.save(fetchedPrice);
-		assertEquals(1, repository.findAll().size());
+		UpdateResult updateResult = priceDocumentUpdateRepository.updatePrice(productId, new BigDecimal(newValue));
+		assertEquals(1l, updateResult.getModifiedCount());
+		assertEquals(1, priceDocumentRepository.findAll().size());
 
-		PriceDocument reFetchedPrice = repository.findByProductId(productId).get();
+		PriceDocument reFetchedPrice = priceDocumentRepository.findByProductId(productId).get();
 		assertTrue(newValue == reFetchedPrice.getValue().doubleValue());
-		assertEquals(newCurrencyCode, reFetchedPrice.getCurrencyCode());
-		assertEquals(1, repository.findAll().size());
+		assertEquals(1, priceDocumentRepository.findAll().size());
 		
-		repository.delete(fetchedPrice);
-		assertFalse(repository.findByProductId(productId).isPresent());
-		assertEquals(0, repository.findAll().size());
+		priceDocumentRepository.delete(fetchedPrice);
+		assertFalse(priceDocumentRepository.findByProductId(productId).isPresent());
+		assertEquals(0, priceDocumentRepository.findAll().size());
 	}
+//	
+//	@Configuration
+//	public class config {
+//		@Bean
+//		public 
+//	}
+	
 }

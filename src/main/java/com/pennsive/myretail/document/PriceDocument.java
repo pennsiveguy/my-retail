@@ -25,10 +25,6 @@ public class PriceDocument {
 		return value;
 	}
 	
-	public void setValue(BigDecimal newValue) {
-		this.value = newValue;
-	}
-	
 	public String getCurrencyCode() {
 		return currencyCode;
 	}

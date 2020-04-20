@@ -1,5 +1,6 @@
 package com.pennsive.myretail.service;
 
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class ProductDomainService {
 	 */
 	@Async
 	public CompletableFuture<RedskyResponseV2> getProduct(Integer productId) {
-	    return CompletableFuture.completedFuture(redskyRestTemplate.getForObject(redskyFullUrlV2, RedskyResponseV2.class, productId));
+	    return CompletableFuture.completedFuture(
+	    		Optional.of(redskyRestTemplate.getForObject(redskyFullUrlV2, RedskyResponseV2.class, productId)).get());
 	}
 }

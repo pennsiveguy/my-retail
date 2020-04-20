@@ -1,7 +1,10 @@
 package com.pennsive.myretail.objectbuilder;
 
+import java.math.BigDecimal;
+
 import org.springframework.test.util.ReflectionTestUtils;
 
+import com.pennsive.myretail.document.PriceDocument;
 import com.pennsive.myretail.model.external.redsky.RedskyItem;
 import com.pennsive.myretail.model.external.redsky.RedskyProduct;
 import com.pennsive.myretail.model.external.redsky.RedskyProductDescription;
@@ -18,5 +21,14 @@ public class TestObjectBuilder {
 		RedskyResponseV2 response = new RedskyResponseV2();
 		ReflectionTestUtils.setField(response, "product", product);
 		return response;
+	}
+	
+	public PriceDocument buildPriceDocument(Integer productId, BigDecimal value, String currencyCode) {
+		PriceDocument price = new PriceDocument();
+		ReflectionTestUtils.setField(price, "productId", productId);
+		ReflectionTestUtils.setField(price, "value", value);
+		ReflectionTestUtils.setField(price, "currencyCode", currencyCode);
+		
+		return price;
 	}
 }

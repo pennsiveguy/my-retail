@@ -8,12 +8,16 @@ import org.springframework.stereotype.Service;
 
 import com.pennsive.myretail.document.PriceDocument;
 import com.pennsive.myretail.repository.PriceDocumentRepository;
+import com.pennsive.myretail.repository.PriceDocumentUpdateRepository;
 import com.pennsive.myretail.response.PriceResponse;
 
 @Service
 public class PriceDocumentService {
 	@Autowired
 	private PriceDocumentRepository priceDocumentRepository;
+	
+	@Autowired
+	private PriceDocumentUpdateRepository priceDocumentUpdateRepository;
 
 	@Async
 	public CompletableFuture<PriceDocument> getPrice(Integer productId) {
@@ -21,8 +25,8 @@ public class PriceDocumentService {
 	}
 
 	public PriceDocument updatePrice(Integer productId, PriceResponse price) {
-		PriceDocument priceDocument = priceDocumentRepository.findByProductId(productId).get();
-		priceDocument.setValue(price.getValue());
-		return priceDocumentRepository.save(priceDocument);
+		priceDocumentRepository.findByProductId(productId).get();
+		priceDocumentUpdateRepository.updatePrice(productId, price.getValue());
+		return priceDocumentRepository.findByProductId(productId).get();
 	}
 }

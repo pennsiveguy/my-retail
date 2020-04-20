@@ -6,6 +6,7 @@ import static org.apache.commons.lang3.RandomUtils.nextInt;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
@@ -22,6 +23,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import com.pennsive.myretail.document.PriceDocument;
 import com.pennsive.myretail.repository.PriceDocumentRepository;
+import com.pennsive.myretail.repository.PriceDocumentUpdateRepository;
 import com.pennsive.myretail.response.PriceResponse;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -30,6 +32,9 @@ public class PriceDocumentServiceTest {
 	
 	@Mock
 	private PriceDocumentRepository priceRepository;
+
+	@Mock
+	private PriceDocumentUpdateRepository priceUpdateRepository;
 	
 	@Mock
 	private PriceDocument priceDocument;
@@ -54,16 +59,14 @@ public class PriceDocumentServiceTest {
 	
 	@Test
 	public void updatePrice_HappyPath() throws InterruptedException, ExecutionException {		
-		when(priceRepository.findByProductId(productId)).thenReturn(Optional.of(priceDocument));		
-		when(priceRepository.save(priceDocument)).thenReturn(priceDocument);
+		when(priceRepository.findByProductId(productId)).thenReturn(Optional.of(priceDocument));
 		
 		PriceResponse newPrice = new PriceResponse(new BigDecimal(nextDouble()), randomAlphabetic(3));
 
 		PriceDocument actualResponse = subject.updatePrice(productId, newPrice);
 		
-		verify(priceRepository).findByProductId(productId);
-		verify(priceDocument).setValue(newPrice.getValue());
-		verify(priceRepository).save(priceDocument);
+		verify(priceRepository, times(2)).findByProductId(productId);
+		verify(priceUpdateRepository).updatePrice(productId, newPrice.getValue());
 		assertNotNull(actualResponse);
 	}
 }
