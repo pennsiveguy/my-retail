@@ -15,7 +15,7 @@ public class ProductDomainService {
 	@Autowired
 	private RestTemplate redskyRestTemplate;
 	
-	@Value("${redsky.full.url.v2}")
+	@Value("${redsky.product.full.url.v2}")
 	private String redskyFullUrlV2;
 	
 	/*
