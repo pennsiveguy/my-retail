@@ -52,8 +52,7 @@ public class ProductController {
 	@PutMapping(path = "/{id}", consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
 	@Operation(description = "Update an item's price. Pick one of the IDs above.",
 	responses = {
-		@ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = PriceResponse.class)),
-			description = "Update successful"),
+		@ApiResponse(responseCode = "200", description = "Update successful"),
 		@ApiResponse(responseCode = "404", description = "No product exists with that ID."),
 		@ApiResponse(responseCode = "400", description = "The product ID must be a number.")
 	})
