@@ -16,14 +16,12 @@ This application is a rudimentary REST API by which to retrieve basic product da
 
 
 #### Downloading the Source Code ####
->	The source code repository is hosted on [GitHub](https://github.com/pennsiveguy/my-retail).
-
->###### What's Included? ######
->> 	1. The production code and configuration files
->> 	2. Unit tests with JUnit4 and Mockito
->> 	3. Controller Integration tests, to verify the correct integration and behavior of the REST Controller and Advice classes
->> 	4. MongoDB database integration tests to verify basic CRUD functionality against the database
->> 	5. Miscellaneous set-up files and a data import/load script
+The source code repository is hosted on [GitHub](https://github.com/pennsiveguy/my-retail). Included are:
+1. The production code and configuration files
+2. Unit tests with JUnit4 and Mockito
+3. Controller Integration tests, to verify the correct integration and behavior of the REST Controller and Advice classes
+4. MongoDB database integration tests to verify basic CRUD functionality against the database
+5. Miscellaneous set-up files and a data import/load script
 
 #### Setting Up, Testing, and Running the Application ####
 * Clone the [GitHub](https://github.com/pennsiveguy/my-retail) repository into your workspace
