@@ -5,8 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
-public class RestClientConfig {
-	
+public class RestTemplateConfig {	
 	@Bean
 	public RestTemplate redskyRestTemplate() {
 		return new RestTemplate();
