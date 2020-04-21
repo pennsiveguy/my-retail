@@ -16,6 +16,6 @@ public class OpenApiConfig {
                 .components(new Components())
                 .info(new Info().title("MyRetail API").description(
                         "This is a REST API for retrieving basic product data from the MyRetail corporation."
-                        + "<br>&copy;2020 Pennsive Consulting LLC"));
+                        + "<br>&copy;2020 Pennsive Consulting, LLC"));
     }
 }
