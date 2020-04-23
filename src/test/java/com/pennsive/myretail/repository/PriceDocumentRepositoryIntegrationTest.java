@@ -66,12 +66,5 @@ public class PriceDocumentRepositoryIntegrationTest extends BaseTest {
 		priceDocumentRepository.delete(fetchedPrice);
 		assertFalse(priceDocumentRepository.findByProductId(productId).isPresent());
 		assertEquals(0, priceDocumentRepository.findAll().size());
-	}
-//	
-//	@Configuration
-//	public class config {
-//		@Bean
-//		public 
-//	}
-	
+	}	
 }
