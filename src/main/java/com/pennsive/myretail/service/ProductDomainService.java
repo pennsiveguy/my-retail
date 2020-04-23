@@ -5,6 +5,7 @@ import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -24,8 +25,8 @@ public class ProductDomainService {
 	 * 		cache-control:	max-age=0, no-cache, no-store
 	 */
 	@Async
-	public CompletableFuture<RedskyResponseV2> getProduct(Integer productId) {
+	public CompletableFuture<ResponseEntity<RedskyResponseV2>> getProduct(Integer productId) {
 	    return CompletableFuture.completedFuture(
-	    		Optional.of(redskyRestTemplate.getForObject(redskyFullUrlV2, RedskyResponseV2.class, productId)).get());
+	    		Optional.of(redskyRestTemplate.getForEntity(redskyFullUrlV2, RedskyResponseV2.class, productId)).get());
 	}
 }

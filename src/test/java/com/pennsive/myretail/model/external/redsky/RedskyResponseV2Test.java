@@ -19,12 +19,12 @@ public class RedskyResponseV2Test {
 
 	@Test
 	public void getTitle_HappyPath() {
-		assertEquals(title, objectBuilder.buildRedskyResponse(title).getTitle());
+		assertEquals(title, objectBuilder.buildRedskyResponse(title).getBody().getTitle());
 	}
 
 	@Test(expected = NoSuchElementException.class)
 	public void getTitle_MissingProduct() {
-		RedskyResponseV2 response = objectBuilder.buildRedskyResponse(title);
+		RedskyResponseV2 response = objectBuilder.buildRedskyResponse(title).getBody();
 		
 		ReflectionTestUtils.setField(response, "product", null);
 		response.getTitle();
@@ -32,7 +32,7 @@ public class RedskyResponseV2Test {
 
 	@Test(expected = NoSuchElementException.class)
 	public void getTitle_MissingItem() {
-		RedskyResponseV2 response = objectBuilder.buildRedskyResponse(title);
+		RedskyResponseV2 response = objectBuilder.buildRedskyResponse(title).getBody();
 		
 		ReflectionTestUtils.setField(ReflectionTestUtils.getField(response, "product"), "item", null);;
 		response.getTitle();
@@ -40,7 +40,7 @@ public class RedskyResponseV2Test {
 
 	@Test(expected = NoSuchElementException.class)
 	public void getTitle_MissingDescription() {
-		RedskyResponseV2 response = objectBuilder.buildRedskyResponse(title);
+		RedskyResponseV2 response = objectBuilder.buildRedskyResponse(title).getBody();
 		
 		ReflectionTestUtils.setField(ReflectionTestUtils.getField(ReflectionTestUtils.getField(response, "product"), "item"), "productDescription", null);
 		response.getTitle();
@@ -48,6 +48,6 @@ public class RedskyResponseV2Test {
 
 	@Test(expected = NoSuchElementException.class)
 	public void getTitle_MissingTitle() {
-		objectBuilder.buildRedskyResponse(null).getTitle();
+		objectBuilder.buildRedskyResponse(null).getBody().getTitle();
 	}
 }

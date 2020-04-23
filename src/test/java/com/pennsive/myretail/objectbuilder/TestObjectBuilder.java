@@ -1,7 +1,12 @@
 package com.pennsive.myretail.objectbuilder;
 
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+
 import java.math.BigDecimal;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.pennsive.myretail.document.PriceDocument;
@@ -11,7 +16,7 @@ import com.pennsive.myretail.model.external.redsky.RedskyProductDescription;
 import com.pennsive.myretail.model.external.redsky.RedskyResponseV2;
 
 public class TestObjectBuilder {	
-	public RedskyResponseV2 buildRedskyResponse(String title) {
+	public ResponseEntity<RedskyResponseV2> buildRedskyResponse(String title) {
 		RedskyProductDescription description = new RedskyProductDescription();
 		ReflectionTestUtils.setField(description, "title", title);
 		RedskyItem item = new RedskyItem();
@@ -20,7 +25,10 @@ public class TestObjectBuilder {
 		ReflectionTestUtils.setField(product, "item", item);
 		RedskyResponseV2 response = new RedskyResponseV2();
 		ReflectionTestUtils.setField(response, "product", product);
-		return response;
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setCacheControl(randomAlphabetic(10));
+		return new ResponseEntity<RedskyResponseV2>(response, headers, HttpStatus.OK);
 	}
 	
 	public PriceDocument buildPriceDocument(Integer productId, BigDecimal value, String currencyCode) {
@@ -30,5 +38,15 @@ public class TestObjectBuilder {
 		ReflectionTestUtils.setField(price, "currencyCode", currencyCode);
 		
 		return price;
+	}
+	
+	public HttpHeaders buildHeaders() {
+		HttpHeaders headers = new HttpHeaders();
+		
+		for(int i = 0; i < 6; i++) {
+			headers.add(randomAlphabetic(10), randomAlphabetic(10));
+		}
+		
+		return headers;
 	}
 }

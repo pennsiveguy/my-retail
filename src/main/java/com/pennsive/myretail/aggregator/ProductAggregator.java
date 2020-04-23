@@ -5,6 +5,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.pennsive.myretail.document.PriceDocument;
@@ -22,21 +25,28 @@ public class ProductAggregator {
 	@Autowired
 	private PriceDocumentService priceDocumentService;
 
-	public ProductResponse getProduct(Integer productId) {
-		CompletableFuture<RedskyResponseV2> redskyResponseFuture = productDomainService.getProduct(productId);
+	public ResponseEntity<ProductResponse> getProduct(Integer productId) {
+		CompletableFuture<ResponseEntity<RedskyResponseV2>> redskyResponseFuture = productDomainService.getProduct(productId);
 
 		CompletableFuture<PriceDocument> priceDocumentFuture = priceDocumentService.getPrice(productId);
 
-		RedskyResponseV2 redskyResponse = null;
+		ResponseEntity<RedskyResponseV2> redskyResponse = null;
 		PriceDocument priceDocument = null;
 		try {
 			redskyResponse = redskyResponseFuture.get();
 			priceDocument = priceDocumentFuture.get();
 		} catch (InterruptedException | ExecutionException ex) {
 			throw new NoSuchElementException();
-		}
+		}		
 
-		return new ProductResponse(productId, redskyResponse.getTitle(), 
+		ProductResponse productResponse = new ProductResponse(productId, redskyResponse.getBody().getTitle(), 
 				new PriceResponse(priceDocument.getValue(), priceDocument.getCurrencyCode()));
+		
+		HttpHeaders responseHeaders = HttpHeaders.writableHttpHeaders(new HttpHeaders());
+		responseHeaders.setCacheControl(redskyResponse.getHeaders().getCacheControl());
+		
+		ResponseEntity<ProductResponse> productResponseEntity = new ResponseEntity<ProductResponse>(productResponse, responseHeaders, HttpStatus.OK);
+		
+		return productResponseEntity;
 	}
 }

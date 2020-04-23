@@ -21,7 +21,9 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
@@ -57,7 +59,7 @@ public class ControllerAdviceIntegrationTest {
 	private String url;
 	private String name;
 	private String currencyCode;
-	private ProductResponse response;
+	private ResponseEntity<ProductResponse> response;
 	private BigDecimal value;
 	private PriceResponse priceResponse;
 
@@ -73,7 +75,7 @@ public class ControllerAdviceIntegrationTest {
 		currencyCode = randomAlphabetic(3);
 		ReflectionTestUtils.setField(priceResponse, "value", value);
 		ReflectionTestUtils.setField(priceResponse, "currencyCode", currencyCode);
-		response = new ProductResponse(id, name, priceResponse);
+		response = new ResponseEntity<ProductResponse>(new ProductResponse(id, name, priceResponse), HttpStatus.OK);
 	}
 
 	@Test

@@ -1,6 +1,7 @@
 package com.pennsive.myretail.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -44,7 +45,7 @@ public class ProductController {
 		@ApiResponse(responseCode = "400", content = @Content(schema = @Schema()),
 			description = "The product ID must be a number")
 	})
-	public ProductResponse getProduct(
+	public ResponseEntity<ProductResponse> getProduct(
 		@Parameter(description = "The numeric ID of the product whose data you wish to retrieve", required = true) @PathVariable("id") Integer id) {
 		return productAggregator.getProduct(id);
 	}

@@ -20,6 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.http.ResponseEntity;
 
 import com.pennsive.myretail.BaseTest;
 import com.pennsive.myretail.document.PriceDocument;
@@ -32,7 +33,7 @@ import com.pennsive.myretail.service.ProductDomainService;
 public class ProductAggregatorTest extends BaseTest {
 	private Integer productId;
 	private String productName;
-	private RedskyResponseV2 redskyResponse;
+	private ResponseEntity<RedskyResponseV2> redskyResponse;
 	private BigDecimal value;
 	private PriceDocument priceDocument;
 	private String currencyCode;
@@ -62,7 +63,9 @@ public class ProductAggregatorTest extends BaseTest {
 		when(productService.getProduct(productId)).thenReturn(CompletableFuture.completedFuture(Optional.of(redskyResponse).get()));
 		when(priceService.getPrice(productId)).thenReturn(CompletableFuture.completedFuture(priceDocument));
 		
-		ProductResponse response = subject.getProduct(productId);
+		ResponseEntity<ProductResponse> responseEntity = subject.getProduct(productId);		
+		
+		ProductResponse response = responseEntity.getBody();
 		
 		assertEquals(productId, response.getId());
 		assertEquals(value, response.getPrice().getValue());
@@ -71,12 +74,14 @@ public class ProductAggregatorTest extends BaseTest {
 		verify(productService).getProduct(productId);
 		verify(priceService).getPrice(productId);
 		verifyNoMoreInteractions(productService, priceService);
+		
+		assertEquals(redskyResponse.getHeaders().getCacheControl(), responseEntity.getHeaders().getCacheControl());
 	}
 	
 	@Test(expected = NoSuchElementException.class)
 	public void getProduct_InterruptedException_FromProduct() throws InterruptedException, ExecutionException {
 		@SuppressWarnings("unchecked")
-		CompletableFuture<RedskyResponseV2> mockFuture = Mockito.mock(CompletableFuture.class);
+		CompletableFuture<ResponseEntity<RedskyResponseV2>> mockFuture = Mockito.mock(CompletableFuture.class);
 		when(productService.getProduct(productId)).thenReturn(mockFuture);
 		when(mockFuture.get()).thenThrow(new InterruptedException());
 		subject.getProduct(productId);
@@ -85,7 +90,7 @@ public class ProductAggregatorTest extends BaseTest {
 	@Test(expected = NoSuchElementException.class)
 	public void getProduct_ExecutionException_FromProduct() throws InterruptedException, ExecutionException {
 		@SuppressWarnings("unchecked")
-		CompletableFuture<RedskyResponseV2> mockFuture = Mockito.mock(CompletableFuture.class);
+		CompletableFuture<ResponseEntity<RedskyResponseV2>> mockFuture = Mockito.mock(CompletableFuture.class);
 		when(productService.getProduct(productId)).thenReturn(mockFuture);
 		when(mockFuture.get()).thenThrow(new TestException());
 		subject.getProduct(productId);
