@@ -135,6 +135,14 @@ public class ControllerAdviceIntegrationTest {
 	}
 
 	@Test
+	public void updatePrice_InvalidPrice() throws Exception {
+		PriceResponse invalidPrice = new PriceResponse(new BigDecimal(-1.00), randomAlphabetic(10));
+		mockMvc.perform(put(BASE_PATH + randomAlphabetic(5)).content(objectMapper.writeValueAsString(invalidPrice))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isBadRequest());
+	}
+
+	@Test
 	public void updatePrice_PriceNotFound() throws Exception {
 		when(priceService.updatePrice(eq(id), any(PriceResponse.class))).thenThrow(new NoSuchElementException());
 

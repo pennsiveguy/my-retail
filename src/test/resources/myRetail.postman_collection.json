@@ -223,6 +223,35 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Update Price - Negative Price",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"value\": -1.00,\n  \"currency_code\": \"USD\"\n}"
+				},
+				"url": {
+					"raw": "{{hostName}}/products/53727884",
+					"host": [
+						"{{hostName}}"
+					],
+					"path": [
+						"products",
+						"53727884"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [

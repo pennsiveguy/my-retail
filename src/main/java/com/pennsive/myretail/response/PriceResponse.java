@@ -2,9 +2,14 @@ package com.pennsive.myretail.response;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonGetter;
 
 public class PriceResponse {
+	@NotNull
+	@Min(0)
 	private BigDecimal value;
 	private String currencyCode;
 	

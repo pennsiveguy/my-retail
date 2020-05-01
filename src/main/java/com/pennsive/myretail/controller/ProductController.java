@@ -1,4 +1,6 @@
 package com.pennsive.myretail.controller;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -58,7 +60,7 @@ public class ProductController {
 		@ApiResponse(responseCode = "400", description = "The product ID must be a number")
 	})
 	public void updatePrice(
-		@Parameter(description = "The new price", required = true) @RequestBody PriceResponse price,
+		@Parameter(description = "The new price", required = true) @Valid @RequestBody PriceResponse price,
 		@Parameter(description = "The numeric ID of the product whose price you wish to update", required = true) @PathVariable("id") Integer id) {
 		priceDocumentService.updatePrice(id, price);
 	}
