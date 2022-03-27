@@ -1,15 +1,9 @@
 package com.pennsive.myretail.repository;
 
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
-import static org.apache.commons.lang3.RandomUtils.nextDouble;
-import static org.apache.commons.lang3.RandomUtils.nextInt;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.math.BigDecimal;
-import java.util.Optional;
-
+import com.mongodb.client.result.UpdateResult;
+import com.pennsive.myretail.BaseTest;
+import com.pennsive.myretail.IntegrationTestConfig;
+import com.pennsive.myretail.document.PriceDocument;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +13,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.mongodb.client.result.UpdateResult;
-import com.pennsive.myretail.BaseTest;
-import com.pennsive.myretail.IntegrationTestConfig;
-import com.pennsive.myretail.document.PriceDocument;
+import java.math.BigDecimal;
+import java.util.Optional;
+
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static org.apache.commons.lang3.RandomUtils.nextDouble;
+import static org.apache.commons.lang3.RandomUtils.nextInt;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @EnableAutoConfiguration

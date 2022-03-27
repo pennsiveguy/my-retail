@@ -1,20 +1,10 @@
 package com.pennsive.myretail.controller;
 
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
-import static org.apache.commons.lang3.RandomUtils.nextDouble;
-import static org.apache.commons.lang3.RandomUtils.nextInt;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.math.BigDecimal;
-import java.util.NoSuchElementException;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pennsive.myretail.aggregator.ProductAggregator;
+import com.pennsive.myretail.response.PriceResponse;
+import com.pennsive.myretail.response.ProductResponse;
+import com.pennsive.myretail.service.PriceDocumentService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,11 +22,20 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.client.RestClientException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pennsive.myretail.aggregator.ProductAggregator;
-import com.pennsive.myretail.response.PriceResponse;
-import com.pennsive.myretail.response.ProductResponse;
-import com.pennsive.myretail.service.PriceDocumentService;
+import java.math.BigDecimal;
+import java.util.NoSuchElementException;
+
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static org.apache.commons.lang3.RandomUtils.nextDouble;
+import static org.apache.commons.lang3.RandomUtils.nextInt;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ControllerAdviceIntegrationTest {

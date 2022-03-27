@@ -1,19 +1,9 @@
 package com.pennsive.myretail.service;
 
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
-import static org.apache.commons.lang3.RandomUtils.nextDouble;
-import static org.apache.commons.lang3.RandomUtils.nextInt;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-
+import com.pennsive.myretail.document.PriceDocument;
+import com.pennsive.myretail.repository.PriceDocumentRepository;
+import com.pennsive.myretail.repository.PriceDocumentUpdateRepository;
+import com.pennsive.myretail.response.PriceResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,10 +11,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import com.pennsive.myretail.document.PriceDocument;
-import com.pennsive.myretail.repository.PriceDocumentRepository;
-import com.pennsive.myretail.repository.PriceDocumentUpdateRepository;
-import com.pennsive.myretail.response.PriceResponse;
+import java.math.BigDecimal;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static org.apache.commons.lang3.RandomUtils.nextDouble;
+import static org.apache.commons.lang3.RandomUtils.nextInt;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PriceDocumentServiceTest {

@@ -1,11 +1,10 @@
 package com.pennsive.myretail.response;
 
-import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonGetter;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonGetter;
+import java.math.BigDecimal;
 
 public class PriceResponse {
 	@NotNull

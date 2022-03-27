@@ -1,13 +1,12 @@
 package com.pennsive.myretail;
 
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.pennsive.myretail.repository.PriceDocumentUpdateRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
-
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.pennsive.myretail.repository.PriceDocumentUpdateRepository;
 
 @Configuration
 public class IntegrationTestConfig {
