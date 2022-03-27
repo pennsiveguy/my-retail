@@ -5,6 +5,9 @@
 build
 /bin/
 
+# Ignore IntelliJ files
+.idea*
+
 # Ignore Eclipse workspace files
 .project
 .settings
