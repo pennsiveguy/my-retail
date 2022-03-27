@@ -1,15 +1,14 @@
 package com.pennsive.myretail.service;
 
-import java.util.concurrent.CompletableFuture;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-
 import com.pennsive.myretail.document.PriceDocument;
 import com.pennsive.myretail.repository.PriceDocumentRepository;
 import com.pennsive.myretail.repository.PriceDocumentUpdateRepository;
 import com.pennsive.myretail.response.PriceResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class PriceDocumentService {

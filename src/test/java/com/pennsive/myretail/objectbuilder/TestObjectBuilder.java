@@ -1,19 +1,18 @@
 package com.pennsive.myretail.objectbuilder;
 
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
-
-import java.math.BigDecimal;
-
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.util.ReflectionTestUtils;
-
 import com.pennsive.myretail.document.PriceDocument;
 import com.pennsive.myretail.model.external.redsky.RedskyItem;
 import com.pennsive.myretail.model.external.redsky.RedskyProduct;
 import com.pennsive.myretail.model.external.redsky.RedskyProductDescription;
 import com.pennsive.myretail.model.external.redsky.RedskyResponseV2;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import java.math.BigDecimal;
+
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 
 public class TestObjectBuilder {	
 	public ResponseEntity<RedskyResponseV2> buildRedskyResponse(String title) {

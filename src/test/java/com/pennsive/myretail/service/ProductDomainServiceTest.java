@@ -1,11 +1,7 @@
 package com.pennsive.myretail.service;
 
-import static org.junit.Assert.assertSame;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.concurrent.ExecutionException;
-
+import com.pennsive.myretail.BaseTest;
+import com.pennsive.myretail.model.external.redsky.RedskyResponseV2;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.Before;
@@ -22,8 +18,11 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import com.pennsive.myretail.BaseTest;
-import com.pennsive.myretail.model.external.redsky.RedskyResponseV2;
+import java.util.concurrent.ExecutionException;
+
+import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProductDomainServiceTest extends BaseTest{

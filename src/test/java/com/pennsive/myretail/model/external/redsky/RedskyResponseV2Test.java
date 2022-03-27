@@ -1,16 +1,15 @@
 package com.pennsive.myretail.model.external.redsky;
 
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
-import static org.junit.Assert.assertEquals;
-
-import java.util.NoSuchElementException;
-
+import com.pennsive.myretail.objectbuilder.TestObjectBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import com.pennsive.myretail.objectbuilder.TestObjectBuilder;
+import java.util.NoSuchElementException;
+
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RedskyResponseV2Test {

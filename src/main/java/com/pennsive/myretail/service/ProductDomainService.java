@@ -1,8 +1,6 @@
 package com.pennsive.myretail.service;
 
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-
+import com.pennsive.myretail.model.external.redsky.RedskyResponseV2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +8,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.pennsive.myretail.model.external.redsky.RedskyResponseV2;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class ProductDomainService {	

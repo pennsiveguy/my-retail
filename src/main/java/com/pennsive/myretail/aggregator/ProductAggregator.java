@@ -1,21 +1,20 @@
 package com.pennsive.myretail.aggregator;
 
-import java.util.NoSuchElementException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-
 import com.pennsive.myretail.document.PriceDocument;
 import com.pennsive.myretail.model.external.redsky.RedskyResponseV2;
 import com.pennsive.myretail.response.PriceResponse;
 import com.pennsive.myretail.response.ProductResponse;
 import com.pennsive.myretail.service.PriceDocumentService;
 import com.pennsive.myretail.service.ProductDomainService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import java.util.NoSuchElementException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class ProductAggregator {

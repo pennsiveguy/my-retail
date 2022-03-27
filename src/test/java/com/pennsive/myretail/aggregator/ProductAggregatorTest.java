@@ -1,16 +1,11 @@
 package com.pennsive.myretail.aggregator;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-
+import com.pennsive.myretail.BaseTest;
+import com.pennsive.myretail.document.PriceDocument;
+import com.pennsive.myretail.model.external.redsky.RedskyResponseV2;
+import com.pennsive.myretail.response.ProductResponse;
+import com.pennsive.myretail.service.PriceDocumentService;
+import com.pennsive.myretail.service.ProductDomainService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.Before;
@@ -22,12 +17,14 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.ResponseEntity;
 
-import com.pennsive.myretail.BaseTest;
-import com.pennsive.myretail.document.PriceDocument;
-import com.pennsive.myretail.model.external.redsky.RedskyResponseV2;
-import com.pennsive.myretail.response.ProductResponse;
-import com.pennsive.myretail.service.PriceDocumentService;
-import com.pennsive.myretail.service.ProductDomainService;
+import java.math.BigDecimal;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProductAggregatorTest extends BaseTest {

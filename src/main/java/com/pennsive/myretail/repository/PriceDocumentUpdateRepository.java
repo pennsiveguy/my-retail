@@ -1,7 +1,7 @@
 package com.pennsive.myretail.repository;
 
-import java.math.BigDecimal;
-
+import com.mongodb.client.result.UpdateResult;
+import com.pennsive.myretail.document.PriceDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -9,8 +9,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
-import com.mongodb.client.result.UpdateResult;
-import com.pennsive.myretail.document.PriceDocument;
+import java.math.BigDecimal;
 
 @Repository
 public class PriceDocumentUpdateRepository {
